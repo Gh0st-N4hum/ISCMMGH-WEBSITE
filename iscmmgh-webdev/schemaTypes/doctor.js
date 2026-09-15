@@ -16,12 +16,25 @@ export default {
       validation: (Rule) => Rule.required(),
     },
     {
-      name: 'specialization',
-      title: 'Specialization',
-      type: 'string',
-      description: 'e.g. Pediatrics, Internal Medicine, OB-GYN, General Surgery',
-      validation: (Rule) => Rule.required(),
-    },
+  name: 'specialization',
+  title: 'Specialization',
+  type: 'string',
+  options: {
+    list: [
+      'Cardiology', 'Pulmonology', 'Pediatrics', 'General Surgery',
+      'Internal Medicine', 'OB-GYN', 'General Medicine',
+      'Orthopedics', 'Dermatology', 'ENT (Otorhinolaryngology)', 'Other'
+    ],
+  },
+  validation: (Rule) => Rule.required(),
+},
+{
+  name: 'background',
+  title: 'Background / Bio',
+  type: 'text',
+  rows: 4,
+  description: 'Education, experience, or a short professional background — shown on the doctor\'s profile.',
+},
     {
       name: 'consultationDays',
       title: 'Consultation Days',
