@@ -24,6 +24,13 @@ export default {
       validation: (Rule) => Rule.required(),
     },
     {
+      name: 'image',
+      title: 'Photo',
+      type: 'image',
+      options: { hotspot: true },
+      description: 'Optional — shown on the announcement card if uploaded.',
+    },
+    {
       name: 'body',
       title: 'Description',
       type: 'text',
@@ -48,6 +55,8 @@ export default {
     select: {
       title: 'title',
       subtitle: 'tag',
+      media: 'image',
     },
   },
 }
+

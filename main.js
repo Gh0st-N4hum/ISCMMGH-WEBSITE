@@ -161,38 +161,142 @@ if (searchInput) searchInput.addEventListener('input', applyDoctorFilters);
 
 
 const GROQ_ANNOUNCEMENTS_QUERY = `*[_type == "announcement"] | order(_createdAt desc){
-  title, tag, body, date
+  title, tag, body, date,
+  "imageUrl": image.asset->url
 }`;
+
+let allAnnouncements = [];
+const ANNOUNCEMENTS_INITIAL_LIMIT = 3;
+const ANNOUNCEMENT_EXCERPT_LENGTH = 150;
+let announcementsExpanded = false;
 
 async function loadAnnouncements() {
   const url = `https://${SANITY_PROJECT_ID}.api.sanity.io/v2024-01-01/data/query/${SANITY_DATASET}?query=${encodeURIComponent(GROQ_ANNOUNCEMENTS_QUERY)}`;
   const response = await fetch(url);
   const data = await response.json();
-  renderAnnouncements(data.result);
+  allAnnouncements = data.result || [];
+  renderAnnouncements();
 }
 
-function renderAnnouncements(announcements) {
+function truncateText(text, length) {
+  if (!text) return '';
+  if (text.length <= length) return text;
+  return text.slice(0, length).trim() + '…';
+}
+
+function renderAnnouncements() {
   const grid = document.getElementById('newsGrid');
   if (!grid) return;
   grid.innerHTML = '';
 
-  if (!announcements || announcements.length === 0) {
+  if (allAnnouncements.length === 0) {
     grid.innerHTML = '<p style="color:var(--ink-soft);">No announcements right now — check back soon.</p>';
     return;
   }
 
-  announcements.forEach(item => {
+  const visible = announcementsExpanded
+    ? allAnnouncements
+    : allAnnouncements.slice(0, ANNOUNCEMENTS_INITIAL_LIMIT);
+
+  visible.forEach((item, index) => {
     const article = document.createElement('article');
     article.className = 'news-card';
+
+    const imageHTML = item.imageUrl
+      ? `<img src="${item.imageUrl}" alt="${item.title || ''}" class="news-card-img">`
+      : '';
+
+    const isLong = (item.body || '').length > ANNOUNCEMENT_EXCERPT_LENGTH;
+    const excerpt = truncateText(item.body, ANNOUNCEMENT_EXCERPT_LENGTH);
+    const viewMoreHTML = isLong
+      ? `<button type="button" class="news-excerpt-link" data-announcement-index="${index}">View More</button>`
+      : '';
+
     article.innerHTML = `
+      ${imageHTML}
       <span class="news-tag">${item.tag || ''}</span>
       <h3>${item.title || ''}</h3>
-      <p>${item.body || ''}</p>
+      <p>${excerpt}</p>
+      ${viewMoreHTML}
       <div class="news-date">${item.date || ''}</div>
     `;
     grid.appendChild(article);
   });
+
+  // Wire up "View More" buttons to open the modal with the right announcement
+  grid.querySelectorAll('.news-excerpt-link').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = Number(btn.dataset.announcementIndex);
+      openAnnouncementModal(visible[idx]);
+    });
+  });
+
+  renderViewMoreListButton(grid);
 }
+
+function renderViewMoreListButton(grid) {
+  const existingBtn = document.getElementById('newsViewMoreWrap');
+  if (existingBtn) existingBtn.remove();
+
+  if (allAnnouncements.length <= ANNOUNCEMENTS_INITIAL_LIMIT) return;
+
+  const wrap = document.createElement('div');
+  wrap.id = 'newsViewMoreWrap';
+  wrap.style.textAlign = 'center';
+  wrap.style.gridColumn = '1 / -1';
+  wrap.style.marginTop = '20px';
+
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'btn-primary';
+  btn.textContent = announcementsExpanded ? 'Show Less' : 'View More Announcements';
+  btn.addEventListener('click', () => {
+    announcementsExpanded = !announcementsExpanded;
+    renderAnnouncements();
+  });
+
+  wrap.appendChild(btn);
+  grid.parentElement.insertBefore(wrap, grid.nextSibling);
+}
+
+// ---------- Modal logic ----------
+function openAnnouncementModal(item) {
+  const modal = document.getElementById('announcementModal');
+  const body = document.getElementById('announcementModalBody');
+  if (!modal || !body || !item) return;
+
+  const imageHTML = item.imageUrl
+    ? `<img src="${item.imageUrl}" alt="${item.title || ''}" class="announcement-modal-img">`
+    : '';
+
+  body.innerHTML = `
+    ${imageHTML}
+    <span class="news-tag">${item.tag || ''}</span>
+    <h2 style="margin-top:10px;">${item.title || ''}</h2>
+    <div class="announcement-modal-body">
+      <p>${item.body || ''}</p>
+    </div>
+    <div class="news-date" style="margin-top:16px;">${item.date || ''}</div>
+  `;
+
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeAnnouncementModal() {
+  const modal = document.getElementById('announcementModal');
+  if (!modal) return;
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('announcementModalClose')?.addEventListener('click', closeAnnouncementModal);
+document.getElementById('announcementModalBackdrop')?.addEventListener('click', closeAnnouncementModal);
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeAnnouncementModal();
+});
 
 loadDoctors();
 loadAnnouncements();
