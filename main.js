@@ -159,6 +159,41 @@ function renderDoctors(doctors) {
 const searchInput = document.getElementById('doctorSearch');
 if (searchInput) searchInput.addEventListener('input', applyDoctorFilters);
 
+
+const GROQ_ANNOUNCEMENTS_QUERY = `*[_type == "announcement"] | order(_createdAt desc){
+  title, tag, body, date
+}`;
+
+async function loadAnnouncements() {
+  const url = `https://${SANITY_PROJECT_ID}.api.sanity.io/v2024-01-01/data/query/${SANITY_DATASET}?query=${encodeURIComponent(GROQ_ANNOUNCEMENTS_QUERY)}`;
+  const response = await fetch(url);
+  const data = await response.json();
+  renderAnnouncements(data.result);
+}
+
+function renderAnnouncements(announcements) {
+  const grid = document.getElementById('newsGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  if (!announcements || announcements.length === 0) {
+    grid.innerHTML = '<p style="color:var(--ink-soft);">No announcements right now — check back soon.</p>';
+    return;
+  }
+
+  announcements.forEach(item => {
+    const article = document.createElement('article');
+    article.className = 'news-card';
+    article.innerHTML = `
+      <span class="news-tag">${item.tag || ''}</span>
+      <h3>${item.title || ''}</h3>
+      <p>${item.body || ''}</p>
+      <div class="news-date">${item.date || ''}</div>
+    `;
+    grid.appendChild(article);
+  });
+}
+
 loadDoctors();
 loadAnnouncements();
 
