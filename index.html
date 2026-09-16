@@ -262,7 +262,8 @@
         <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/><path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
         <input type="text" id="doctorSearch" placeholder="Search doctors or specializations…" aria-label="Search doctors">
       </div>
-      <div class="doctor-grid" id="doctorGrid">
+<div class="category-pills" id="categoryPills"></div>
+<div class="doctor-grid" id="doctorGrid">
         <div class="doctor-card reveal" data-search="jason bocaling pediatrics">
           <div class="doctor-avatar">JB</div>
           <div>
@@ -354,13 +355,6 @@
                 <div><strong>Get approved and start enjoying member benefits</strong><span>Once approved by the Board, your discounts and priority care begin.</span></div>
               </div>
             </div>
-            <div class="portal-box">
-              <div>
-                <strong>Already a member?</strong>
-                <p>Log in to your Member Portal to view your share status and benefits.</p>
-              </div>
-              <a href="#" class="btn btn-primary">Member Login</a>
-            </div>
           </div>
         </div>
       </div>
@@ -397,7 +391,9 @@
             </div>
           </div>
         </div>
-        <form class="form-card reveal delay-1">
+        <form class="form-card reveal delay-1" action="https://formspree.io/f/maeyrvnr" method="post">
+           <input type="hidden" name="_subject" value="New inquiry from ISCMMGH website">
+           <input type="hidden" name="_next" value="https://iscmmgh.com/thank-you">
           <div class="field">
             <label for="fname">Full name</label>
             <input type="text" id="fname" name="fname" placeholder="Juan Dela Cruz" required>
