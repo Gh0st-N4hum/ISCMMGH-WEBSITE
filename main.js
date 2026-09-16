@@ -130,13 +130,12 @@ function renderDoctors(doctors) {
     return;
   }
 
-  doctors.forEach(doc => {
+  doctors.forEach((doc, index) => {
     const days = (doc.consultationDays || []).join(', ') || 'TBA';
     const hours = doc.clinicHours || 'TBA';
     const avatarHTML = doc.photoUrl
       ? `<img src="${doc.photoUrl}" alt="${doc.name}" class="doctor-avatar-img">`
       : `<div class="doctor-avatar">${getInitials(doc.name)}</div>`;
-    const bioHTML = doc.background ? `<p class="doctor-bio">${doc.background}</p>` : '';
 
     const card = document.createElement('div');
     card.className = 'doctor-card';
@@ -149,15 +148,69 @@ function renderDoctors(doctors) {
           <span><strong>Consultation Days:</strong> ${days}</span>
           <span><strong>Clinic Hours:</strong> ${hours}</span>
         </div>
-        ${bioHTML}
+        <button type="button" class="doctor-profile-link" data-doctor-index="${index}">View Profile</button>
       </div>
     `;
     grid.appendChild(card);
+  });
+
+  grid.querySelectorAll('.doctor-profile-link').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = Number(btn.dataset.doctorIndex);
+      openDoctorModal(doctors[idx]);
+    });
   });
 }
 
 const searchInput = document.getElementById('doctorSearch');
 if (searchInput) searchInput.addEventListener('input', applyDoctorFilters);
+
+function openDoctorModal(doc) {
+  const modal = document.getElementById('doctorModal');
+  const body = document.getElementById('doctorModalBody');
+  if (!modal || !body || !doc) return;
+
+  const days = (doc.consultationDays || []).join(', ') || 'TBA';
+  const hours = doc.clinicHours || 'TBA';
+  const avatarHTML = doc.photoUrl
+    ? `<img src="${doc.photoUrl}" alt="${doc.name}" class="doctor-modal-avatar-img">`
+    : `<div class="doctor-modal-avatar">${getInitials(doc.name)}</div>`;
+  const bioHTML = doc.background
+    ? `<p>${doc.background}</p>`
+    : `<p style="color:var(--ink-soft);">No additional background provided.</p>`;
+
+  body.innerHTML = `
+    <div class="doctor-modal-header">
+      ${avatarHTML}
+      <div>
+        <h2 style="margin-bottom:4px;">${doc.name}</h2>
+        <div class="doctor-spec">${doc.specialization || ''}</div>
+      </div>
+    </div>
+    <div class="doctor-meta" style="margin-bottom:18px;">
+      <span><strong>Consultation Days:</strong> ${days}</span>
+      <span><strong>Clinic Hours:</strong> ${hours}</span>
+    </div>
+    <div class="announcement-modal-body">
+      ${bioHTML}
+    </div>
+  `;
+
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDoctorModal() {
+  const modal = document.getElementById('doctorModal');
+  if (!modal) return;
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('doctorModalClose')?.addEventListener('click', closeDoctorModal);
+document.getElementById('doctorModalBackdrop')?.addEventListener('click', closeDoctorModal);
 
 
 const GROQ_ANNOUNCEMENTS_QUERY = `*[_type == "announcement"] | order(_createdAt desc){
@@ -297,6 +350,8 @@ document.getElementById('announcementModalBackdrop')?.addEventListener('click', 
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') closeAnnouncementModal();
 });
+
+
 
 loadDoctors();
 loadAnnouncements();

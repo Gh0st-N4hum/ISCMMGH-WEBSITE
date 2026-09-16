@@ -486,3 +486,23 @@ footer { background: var(--trust-800); color: rgba(255,255,255,.78); padding-blo
 .announcement-modal-body p{
   color: var(--ink-soft); line-height: 1.7; white-space: pre-line;
 }
+
+.doctor-modal-header{
+  display:flex; align-items:center; gap:18px; margin-bottom:20px;
+}
+.doctor-modal-avatar-img{
+  width:84px; height:84px; border-radius:50%; object-fit:cover; flex-shrink:0;
+}
+.doctor-modal-avatar{
+  width:84px; height:84px; border-radius:50%; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  background: var(--teal-soft); color: var(--teal-deep);
+  font-family: var(--serif); font-weight:600; font-size:1.4rem;
+}
+.doctor-profile-link{
+  display:inline-block; margin-top:14px; font-weight:600; font-size:.9rem;
+  color: var(--teal-deep); cursor:pointer; border:none; background:none; padding:0;
+  text-decoration: underline; text-underline-offset: 3px;
+}
+.doctor-profile-link:hover{ color: var(--teal); }
+
