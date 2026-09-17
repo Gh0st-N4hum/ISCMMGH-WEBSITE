@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Internal Medicine">
+  <title>Internal Medicine</title>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="256" cy="256" r="218" fill="#0F5F66" stroke="#FFFFFF" stroke-width="16"/>
+    <path d="M130 256h252" stroke="#526F8F" stroke-width="18"/>
+    <path d="M188 173v83c0 46 31 77 68 77s68-31 68-77v-83" stroke="#FFFFFF" stroke-width="22"/>
+    <path d="M188 173c0 27-20 45-43 45s-43-18-43-45" stroke="#FFFFFF" stroke-width="18"/>
+    <circle cx="325" cy="338" r="35" fill="#FFFFFF" stroke="#526F8F" stroke-width="12"/>
+    <path d="M325 373v-35h28" stroke="#526F8F" stroke-width="11"/>
+  </g>
+  <g font-family="Arial, Helvetica, sans-serif" text-anchor="middle">
+    <text x="256" y="454" font-size="27" font-weight="700" fill="#FFFFFF">Internal Medicine</text>
+  </g>
+</svg>

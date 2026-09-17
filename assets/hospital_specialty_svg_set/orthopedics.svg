@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Orthopedics">
+  <title>Orthopedics</title>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="256" cy="256" r="218" fill="#0F5F66" stroke="#FFFFFF" stroke-width="16"/>
+    <path d="M130 256h252" stroke="#526F8F" stroke-width="18"/>
+    <path d="M174 184c-20-20-52-17-66 4-13 19-6 44 13 55l52 52-21 21c-17 17-17 44 0 61 17 17 44 17 61 0l21-21 52 52c11 19 36 26 55 13 21-14 24-46 4-66l-21-21-52-52 21-21c17-17 17-44 0-61-17-17-44-17-61 0l-21 21-52-52z" fill="#FFFFFF" stroke="#526F8F" stroke-width="12"/>
+  </g>
+  <g font-family="Arial, Helvetica, sans-serif" text-anchor="middle">
+    <text x="256" y="454" font-size="27" font-weight="700" fill="#FFFFFF">Orthopedics</text>
+  </g>
+</svg>

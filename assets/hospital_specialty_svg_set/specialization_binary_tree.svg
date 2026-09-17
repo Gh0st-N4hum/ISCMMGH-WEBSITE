@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-label="Hospital specialization binary-tree navigation">
+<title>Hospital Specialization Binary Tree Navigation</title>
+<rect width="1600" height="1000" fill="none"/>
+<g fill="none" stroke="#526F8F" stroke-width="7" stroke-linecap="round">
+  <path d="M800 150V250M800 250H410M800 250H1190"/>
+  <path d="M410 250V340M410 340H210M410 340H610"/>
+  <path d="M1190 250V340M1190 340H990M1190 340H1390"/>
+  <path d="M210 450V530M210 530H110M210 530H310"/>
+  <path d="M610 450V530M610 530H510M610 530H710"/>
+  <path d="M990 450V530M990 530H890M990 530H1090"/>
+  <path d="M1390 450V530M1390 530H1290M1390 530H1490"/>
+  <path d="M410 630V710M410 710H310M410 710H510"/>
+  <path d="M1190 630V710M1190 710H1090M1190 710H1290"/>
+</g>
+<g font-family="Arial, Helvetica, sans-serif" text-anchor="middle">
+  <circle cx="800" cy="100" r="50" fill="#0F5F66"/>
+  <path d="M800 70v60M770 100h60" stroke="#FFFFFF" stroke-width="16" stroke-linecap="round"/>
+  <text x="800" y="190" font-size="28" font-weight="700" fill="#0F5F66">Hospital Specialties</text>
+<rect x="138" y="354.0" width="144" height="72" rx="18" fill="#0F5F66"/><text x="210" y="399" font-size="22" font-weight="700" fill="#FFFFFF">Cardiology</text><rect x="538" y="354.0" width="144" height="72" rx="18" fill="#0F5F66"/><text x="610" y="399" font-size="22" font-weight="700" fill="#FFFFFF">Pulmonology</text><rect x="918" y="354.0" width="144" height="72" rx="18" fill="#0F5F66"/><text x="990" y="399" font-size="22" font-weight="700" fill="#FFFFFF">Pediatrics</text><rect x="1318" y="354.0" width="144" height="72" rx="18" fill="#0F5F66"/><text x="1390" y="399" font-size="22" font-weight="700" fill="#FFFFFF">General Surgery</text><rect x="38" y="544.0" width="144" height="72" rx="18" fill="#0F5F66"/><text x="110" y="589" font-size="22" font-weight="700" fill="#FFFFFF">Internal Medicine</text><rect x="238" y="544.0" width="144" height="72" rx="18" fill="#0F5F66"/><text x="310" y="589" font-size="22" font-weight="700" fill="#FFFFFF">OB-GYN</text><rect x="438" y="544.0" width="144" height="72" rx="18" fill="#0F5F66"/><text x="510" y="589" font-size="22" font-weight="700" fill="#FFFFFF">Orthopedics</text><rect x="638" y="544.0" width="144" height="72" rx="18" fill="#0F5F66"/><text x="710" y="589" font-size="22" font-weight="700" fill="#FFFFFF">Dermatology</text><rect x="818" y="544.0" width="144" height="72" rx="18" fill="#0F5F66"/><text x="890" y="589" font-size="22" font-weight="700" fill="#FFFFFF">ENT</text><rect x="1018" y="544.0" width="144" height="72" rx="18" fill="#0F5F66"/><text x="1090" y="589" font-size="22" font-weight="700" fill="#FFFFFF">Other</text><rect x="1236" y="553.0" width="108" height="54" rx="18" fill="#526F8F"/><text x="1290" y="589" font-size="22" font-weight="700" fill="#FFFFFF">Doctors</text><rect x="1436" y="553.0" width="108" height="54" rx="18" fill="#526F8F"/><text x="1490" y="589" font-size="22" font-weight="700" fill="#FFFFFF">Doctors</text><rect x="256" y="733.0" width="108" height="54" rx="18" fill="#526F8F"/><text x="310" y="769" font-size="22" font-weight="700" fill="#FFFFFF">Doctors</text><rect x="456" y="733.0" width="108" height="54" rx="18" fill="#526F8F"/><text x="510" y="769" font-size="22" font-weight="700" fill="#FFFFFF">Doctors</text><rect x="1036" y="733.0" width="108" height="54" rx="18" fill="#526F8F"/><text x="1090" y="769" font-size="22" font-weight="700" fill="#FFFFFF">Doctors</text><rect x="1236" y="733.0" width="108" height="54" rx="18" fill="#526F8F"/><text x="1290" y="769" font-size="22" font-weight="700" fill="#FFFFFF">Doctors</text></g></svg>

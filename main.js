@@ -44,173 +44,146 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
 
-  // =========================================================
-  // 3. DOCTOR DIRECTORY SEARCH FILTER
-  // =========================================================
-  // Originally included in index.html to filter doctor cards
- 
-  
-const searchInput = document.getElementById('doctorSearch');
-
-if (searchInput) {
-  searchInput.addEventListener('input', function() {
-    const q = this.value.trim().toLowerCase();
-    // Look up cards fresh every time you type, instead of once at page
-    // load — since Sanity's real data replaces the placeholder cards
-    // a moment after the page loads.
-    document.querySelectorAll('#doctorGrid .doctor-card').forEach(function(card) {
-      const match = card.dataset.search.toLowerCase().includes(q);
-      card.style.display = match ? '' : 'none';
-    });
-  });
-}
-
 });
 
-const SANITY_PROJECT_ID = 'bw8292do';
-const SANITY_DATASET = 'production';
+// Doctor data, SPECS, getInitials, iconChip and the profile modal
+// all live in doctors-shared.js, which loads before this file.
 
-let allDoctors = [];
-let activeCategory = 'All';
+// =========================================================
+// SPECIALIZATION MAP (homepage)
+// Shows the 11 specializations only — never individual doctors,
+// so the layout stays fixed no matter how many doctors exist.
+// Selecting one hands off to doctors.html.
+// =========================================================
 
-const GROQ_DOCTORS_QUERY = `*[_type == "doctor"]{
-  name, specialization, consultationDays, clinicHours, background,
-  "photoUrl": photo.asset->url
-}`;
+let specCounts = {};
+let treeExpanded = false;
+const specNodes = new Map();
+let doctorTree, doctorTreeLinks, hubNode;
 
-async function loadDoctors() {
-  const url = `https://${SANITY_PROJECT_ID}.api.sanity.io/v2024-01-01/data/query/${SANITY_DATASET}?query=${encodeURIComponent(GROQ_DOCTORS_QUERY)}`;
-  const response = await fetch(url);
-  const data = await response.json();
-  allDoctors = data.result;
-  renderCategoryPills(allDoctors);
-  applyDoctorFilters();
-}
-
-function renderCategoryPills(doctors) {
-  const container = document.getElementById('categoryPills');
-  if (!container) return;
-  const specializations = [...new Set(doctors.map(d => d.specialization).filter(Boolean))].sort();
-  const categories = ['All', ...specializations];
-
-  container.innerHTML = categories.map(cat =>
-    `<button type="button" class="category-pill${cat === activeCategory ? ' active' : ''}" data-category="${cat}">${cat}</button>`
-  ).join('');
-
-  container.querySelectorAll('.category-pill').forEach(pill => {
-    pill.addEventListener('click', () => {
-      activeCategory = pill.dataset.category;
-      container.querySelectorAll('.category-pill').forEach(p => p.classList.remove('active'));
-      pill.classList.add('active');
-      applyDoctorFilters();
-    });
-  });
-}
-
-function applyDoctorFilters() {
-  const searchInput = document.getElementById('doctorSearch');
-  const q = searchInput ? searchInput.value.trim().toLowerCase() : '';
-
-  const filtered = allDoctors.filter(doc => {
-    const matchesCategory = activeCategory === 'All' || doc.specialization === activeCategory;
-    const matchesSearch = `${doc.name} ${doc.specialization}`.toLowerCase().includes(q);
-    return matchesCategory && matchesSearch;
-  });
-
-  renderDoctors(filtered);
-}
-
-function renderDoctors(doctors) {
-  const grid = document.getElementById('doctorGrid');
-  if (!grid) return;
-  grid.innerHTML = '';
-
-  if (doctors.length === 0) {
-    grid.innerHTML = '<p style="color:var(--ink-soft);">No doctors found for this selection.</p>';
-    return;
+function makeTreeNode(tree, cls, iconId, label, hint) {
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.className = 'node ' + cls;
+  b.appendChild(iconChip(iconId));
+  const lbl = document.createElement('span');
+  lbl.className = 'lbl';
+  lbl.textContent = label;
+  b.appendChild(lbl);
+  if (hint) {
+    const h = document.createElement('span');
+    h.className = 'hint';
+    h.textContent = hint;
+    b.appendChild(h);
   }
+  tree.appendChild(b);
+  return b;
+}
 
-  doctors.forEach((doc, index) => {
-    const days = (doc.consultationDays || []).join(', ') || 'TBA';
-    const hours = doc.clinicHours || 'TBA';
-    const avatarHTML = doc.photoUrl
-      ? `<img src="${doc.photoUrl}" alt="${doc.name}" class="doctor-avatar-img">`
-      : `<div class="doctor-avatar">${getInitials(doc.name)}</div>`;
+function placeNode(node, dx, dy, scale) {
+  node.style.transform = `translate(-50%,-50%) translate(${dx}px, ${dy}px) scale(${scale ?? 1})`;
+}
 
-    const card = document.createElement('div');
-    card.className = 'doctor-card';
-    card.innerHTML = `
-      ${avatarHTML}
-      <div>
-        <h3>${doc.name}</h3>
-        <div class="doctor-spec">${doc.specialization}</div>
-        <div class="doctor-meta">
-          <span><strong>Consultation Days:</strong> ${days}</span>
-          <span><strong>Clinic Hours:</strong> ${hours}</span>
-        </div>
-        <button type="button" class="doctor-profile-link" data-doctor-index="${index}">View Profile</button>
-      </div>
-    `;
-    grid.appendChild(card);
+function treeGeometry() {
+  const w = doctorTree.clientWidth, h = doctorTree.clientHeight;
+  const mobile = w < 640;
+  return {
+    w, h, cx: w / 2, cy: h / 2,
+    rx: Math.max(120, w / 2 - (mobile ? 66 : 104)),
+    ry: h / 2 - (mobile ? 70 : 86)
+  };
+}
+
+function specOffset(i) {
+  const g = treeGeometry();
+  const a = -Math.PI / 2 + (i * 2 * Math.PI / SPECS.length);
+  return { dx: Math.cos(a) * g.rx, dy: Math.sin(a) * g.ry, a };
+}
+
+async function initDoctorTree() {
+  doctorTree = document.getElementById('doctorTree');
+  doctorTreeLinks = document.getElementById('doctorTreeLinks');
+  if (!doctorTree) return;
+
+  hubNode = makeTreeNode(doctorTree, 'hub', 'ic-doctor-hub', 'Our doctors', 'Tap to open');
+  requestAnimationFrame(() => { hubNode.classList.add('show'); placeNode(hubNode, 0, 0, 1); });
+  hubNode.addEventListener('click', () => treeExpanded ? collapseDoctorTree() : expandDoctorTree());
+
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      if (!treeExpanded) return;
+      SPECS.forEach((s, i) => {
+        const n = specNodes.get(s.label); if (!n) return;
+        const { dx, dy } = specOffset(i); placeNode(n, dx, dy, 1);
+      });
+      redrawTreeLinks();
+    }, 160);
   });
 
-  grid.querySelectorAll('.doctor-profile-link').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const idx = Number(btn.dataset.doctorIndex);
-      openDoctorModal(doctors[idx]);
-    });
+  // Counts are the only doctor data the homepage needs.
+  try {
+    const docs = await fetchDoctors();
+    specCounts = docs.reduce((acc, d) => {
+      if (d.specialization) acc[d.specialization] = (acc[d.specialization] || 0) + 1;
+      return acc;
+    }, {});
+    specNodes.forEach((node, label) => updateSpecNodeLabel(node, label));
+  } catch (e) {
+    // Counts are a nice-to-have; the map still works without them.
+  }
+}
+
+function updateSpecNodeLabel(node, label) {
+  const n = specCounts[label] || 0;
+  node.querySelector('.lbl').textContent = n ? `${SHORT_BY_SPEC[label]} · ${n}` : SHORT_BY_SPEC[label];
+  node.classList.toggle('empty', n === 0);
+}
+
+function expandDoctorTree() {
+  treeExpanded = true;
+  hubNode.querySelector('.hint').textContent = 'Tap to close';
+  SPECS.forEach((s, i) => {
+    let node = specNodes.get(s.label);
+    if (!node) {
+      node = makeTreeNode(doctorTree, 'spec', s.icon, s.short);
+      node.addEventListener('click', e => {
+        e.stopPropagation();
+        window.location.href = `${DOCTORS_PAGE}?spec=${encodeURIComponent(s.label)}`;
+      });
+      specNodes.set(s.label, node);
+      updateSpecNodeLabel(node, s.label);
+      placeNode(node, 0, 0, .3);
+    }
+    const { dx, dy } = specOffset(i);
+    setTimeout(() => { node.classList.add('show'); placeNode(node, dx, dy, 1); }, 40 + i * 45);
+  });
+  setTimeout(redrawTreeLinks, 460);
+}
+
+function collapseDoctorTree() {
+  treeExpanded = false;
+  hubNode.querySelector('.hint').textContent = 'Tap to open';
+  specNodes.forEach(n => { n.classList.remove('show'); placeNode(n, 0, 0, .3); });
+  doctorTreeLinks.innerHTML = '';
+}
+
+function redrawTreeLinks() {
+  doctorTreeLinks.innerHTML = '';
+  const g = treeGeometry();
+  doctorTreeLinks.setAttribute('viewBox', `0 0 ${g.w} ${g.h}`);
+  if (!treeExpanded) return;
+
+  SPECS.forEach((s, i) => {
+    const { dx, dy } = specOffset(i);
+    const l = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    l.setAttribute('x1', g.cx); l.setAttribute('y1', g.cy);
+    l.setAttribute('x2', g.cx + dx); l.setAttribute('y2', g.cy + dy);
+    doctorTreeLinks.appendChild(l);
   });
 }
 
-const searchInput = document.getElementById('doctorSearch');
-if (searchInput) searchInput.addEventListener('input', applyDoctorFilters);
-
-function openDoctorModal(doc) {
-  const modal = document.getElementById('doctorModal');
-  const body = document.getElementById('doctorModalBody');
-  if (!modal || !body || !doc) return;
-
-  const days = (doc.consultationDays || []).join(', ') || 'TBA';
-  const hours = doc.clinicHours || 'TBA';
-  const avatarHTML = doc.photoUrl
-    ? `<img src="${doc.photoUrl}" alt="${doc.name}" class="doctor-modal-avatar-img">`
-    : `<div class="doctor-modal-avatar">${getInitials(doc.name)}</div>`;
-  const bioHTML = doc.background
-    ? `<p>${doc.background}</p>`
-    : `<p style="color:var(--ink-soft);">No additional background provided.</p>`;
-
-  body.innerHTML = `
-    <div class="doctor-modal-header">
-      ${avatarHTML}
-      <div>
-        <h2 style="margin-bottom:4px;">${doc.name}</h2>
-        <div class="doctor-spec">${doc.specialization || ''}</div>
-      </div>
-    </div>
-    <div class="doctor-meta" style="margin-bottom:18px;">
-      <span><strong>Consultation Days:</strong> ${days}</span>
-      <span><strong>Clinic Hours:</strong> ${hours}</span>
-    </div>
-    <div class="announcement-modal-body">
-      ${bioHTML}
-    </div>
-  `;
-
-  modal.classList.add('open');
-  modal.setAttribute('aria-hidden', 'false');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeDoctorModal() {
-  const modal = document.getElementById('doctorModal');
-  if (!modal) return;
-  modal.classList.remove('open');
-  modal.setAttribute('aria-hidden', 'true');
-  document.body.style.overflow = '';
-}
-
-document.getElementById('doctorModalClose')?.addEventListener('click', closeDoctorModal);
-document.getElementById('doctorModalBackdrop')?.addEventListener('click', closeDoctorModal);
 
 
 const GROQ_ANNOUNCEMENTS_QUERY = `*[_type == "announcement"] | order(_createdAt desc){
@@ -353,7 +326,5 @@ document.addEventListener('keydown', (e) => {
 
 
 
-loadDoctors();
-loadAnnouncements();
-
-
+initDoctorTree();
+if (document.getElementById('newsGrid')) loadAnnouncements();

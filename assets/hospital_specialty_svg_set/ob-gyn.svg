@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="OB-GYN">
+  <title>OB-GYN</title>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="256" cy="256" r="218" fill="#0F5F66" stroke="#FFFFFF" stroke-width="16"/>
+    <path d="M130 256h252" stroke="#526F8F" stroke-width="18"/>
+    <circle cx="218" cy="202" r="39" fill="#FFFFFF" stroke="#526F8F" stroke-width="11"/>
+    <circle cx="307" cy="258" r="28" fill="#FFFFFF" stroke="#526F8F" stroke-width="10"/>
+    <path d="M154 337c4-60 31-91 64-91s60 31 64 91" fill="#FFFFFF" stroke="#526F8F" stroke-width="11"/>
+    <path d="M266 349c3-42 18-62 41-62s38 20 41 62" fill="#FFFFFF" stroke="#526F8F" stroke-width="10"/>
+    <path d="M256 181v54M229 208h54" stroke="#0F5F66" stroke-width="11"/>
+  </g>
+  <g font-family="Arial, Helvetica, sans-serif" text-anchor="middle">
+    <text x="256" y="454" font-size="27" font-weight="700" fill="#FFFFFF">OB-GYN</text>
+  </g>
+</svg>
