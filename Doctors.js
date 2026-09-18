@@ -200,8 +200,15 @@
   });
 
   (async function boot() {
-    const requested = new URL(window.location.href).searchParams.get('spec');
-    if (requested && SPECS.some(s => s.label === requested)) activeSpec = requested;
+    const params = new URL(window.location.href).searchParams;
+    const requestedSpec = params.get('spec');
+    if (requestedSpec && SPECS.some(s => s.label === requestedSpec)) activeSpec = requestedSpec;
+
+    const requestedQuery = params.get('q');
+    if (requestedQuery) {
+      query = requestedQuery.trim().toLowerCase();
+      if (elSearch) elSearch.value = requestedQuery;
+    }
 
     try {
       doctors = await fetchDoctors();

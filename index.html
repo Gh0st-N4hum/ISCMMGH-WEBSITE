@@ -1,3 +1,6 @@
+
+
+Index · HTML
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,9 +29,9 @@
   <symbol id="ic-other" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.8"/><circle cx="8.4" cy="12" r=".9" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r=".9" fill="currentColor" stroke="none"/><circle cx="15.6" cy="12" r=".9" fill="currentColor" stroke="none"/></symbol>
   <symbol id="ic-person" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 20.6a6.5 6.5 0 0 1 13 0"/></symbol>
 </svg>
-
+ 
   <a href="#main" style="position:absolute; left:-999px;">Skip to content</a>
-
+ 
   <!-- ================= EMERGENCY BAR ================= -->
   <div class="emergency-bar">
     <div class="wrap">
@@ -36,7 +39,7 @@
       <a href="tel:+630000000000">Call (077) 000-0000</a>
     </div>
   </div>
-
+ 
   <!-- ================= HEADER / NAV ================= -->
 <header class="nav" id="site-header">
   <div class="wrap nav-inner">
@@ -80,14 +83,14 @@
     </div>
   </div>
 </header>
-
+ 
   <main id="main">
-
+ 
   <!-- ================= HOMEPAGE HUB ================= -->
   <section class="hero" id="home">
   <img class="hero-bg-photo" src="/assets/hospital-photo.png" alt="">
   <div class="hero-bg-overlay"></div>
-
+ 
   <div class="wrap">
     <div class="hero-inner">
       <span class="eyebrow">
@@ -111,7 +114,7 @@
         </a>
       </div>
     </div>
-
+ 
     <div class="hero-info-card">
       <div>
         <span class="hero-icon mint"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.7"/><path d="M12 7v5l3.5 2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
@@ -157,7 +160,7 @@
       </div>
     </div>
   </section>
-
+ 
   <!-- ================= ABOUT US ================= -->
   <section class="section" id="about">
     <div class="wrap">
@@ -184,7 +187,7 @@
           </div>
         </div>
       </div>
-
+ 
       <div class="section-head reveal" style="margin-top:56px;">
         <h2>Board &amp; Administration</h2>
         <p>The members and leaders who guide ISCMMGH's mission.</p>
@@ -213,7 +216,7 @@
       </div>
     </div>
   </section>
-
+ 
   <!-- ================= SERVICES ================= -->
   <section class="section band" id="services">
     <div class="wrap">
@@ -249,11 +252,12 @@
           <h3>Diagnostics &amp; Laboratory</h3>
           <p>Fast, accurate results — because waiting shouldn't add to your worry.</p>
           <ul class="service-list">
-            <li>Blood Chemistry</li>
-            <li>Hematology</li>
-            <li>Urinalysis</li>
-            <li>ECG &amp; X-ray</li>
+            <li>Hematology &amp; Blood Chemistry</li>
+            <li>X-Ray, Ultrasound &amp; 2D Echo</li>
+            <li>Thyroid &amp; Renal Panels</li>
+            <li>COVID-19 Testing</li>
           </ul>
+          <a href="services.html" class="service-card-link">See the full test list</a>
         </div>
         <div class="service-card reveal delay-1">
           <span class="service-icon">
@@ -265,25 +269,29 @@
       </div>
     </div>
   </section>
-
+ 
   <!-- ================= DOCTORS DIRECTORY ================= -->
   <section class="section" id="doctors">
     <div class="wrap">
       <div class="section-head reveal">
         <h2>Meet our doctors</h2>
-        <p>Tap the centre to see every specialization we offer, then pick one to meet the doctors behind it.</p>
+        <p>Search by name, specialty, or condition, or browse our most requested departments below.</p>
       </div>
-
-      <div class="doctor-tree" id="doctorTree">
-        <svg class="doctor-tree-links" id="doctorTreeLinks"></svg>
-      </div>
-
+ 
+      <form class="doctor-search doctor-search-lg reveal" id="homeDoctorSearch">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/><path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <input type="text" id="homeDoctorSearchInput" placeholder="Search by doctor name, specialty, or condition" aria-label="Search doctors">
+        <button type="submit" class="btn btn-primary">Search</button>
+      </form>
+ 
+      <div class="spec-grid" id="specGrid" aria-label="Top specialties"></div>
+ 
       <div class="directory-cta">
-        <a href="doctors.html" class="btn btn-primary">Browse the full doctor directory</a>
+        <a href="doctors.html" class="btn btn-ghost">Browse the full doctor directory</a>
       </div>
     </div>
   </section>
-
+ 
   <!-- ================= COOPERATIVE & MEMBERSHIP ================= -->
   <section class="section" id="cooperative">
     <div class="wrap">
@@ -332,7 +340,7 @@
       </div>
     </div>
   </section>
-
+ 
   <!-- ================= CONTACT & LOCATION ================= -->
   <section class="section band" id="contact">
     <div class="wrap">
@@ -397,9 +405,9 @@
       </div>
     </div>
   </section>
-
+ 
   </main>
-
+ 
   <!-- ================= FOOTER ================= -->
   <footer>
     <div class="wrap">
@@ -443,7 +451,7 @@
       </div>
     </div>
   </footer>
-
+ 
  <!-- ================= ANNOUNCEMENT MODAL ================= -->
 <div id="announcementModal" class="announcement-modal" aria-hidden="true">
   <div class="announcement-modal-backdrop" id="announcementModalBackdrop"></div>
@@ -452,7 +460,7 @@
     <div id="announcementModalBody"></div>
   </div>
 </div>
-
+ 
 <!-- ================= DOCTOR PROFILE MODAL ================= -->
 <div id="doctorModal" class="announcement-modal" aria-hidden="true">
   <div class="announcement-modal-backdrop" id="doctorModalBackdrop"></div>
@@ -461,7 +469,7 @@
     <div id="doctorModalBody"></div>
   </div>
 </div>
-
+ 
   <!-- Link to external JS -->
   <script src="doctors-shared.js" defer></script>
   <script src="main.js" defer></script>
