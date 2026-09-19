@@ -20,6 +20,8 @@
   const elResults = document.getElementById('directoryResults');
   const elSearch = document.getElementById('directorySearch');
   const elCount = document.getElementById('directoryCount');
+  const elSpecToggle = document.getElementById('specToggle');
+  const elSpecToggleLabel = document.getElementById('specToggleLabel');
   if (!elResults) return;
 
   // ---------- helpers ----------
@@ -54,6 +56,23 @@
     history.replaceState(null, '', url);
   }
 
+  // ---------- mobile filter toggle ----------
+  // Below 900px the sidebar list collapses behind this button instead of
+  // becoming a horizontally-scrolling row — swiping sideways to find a
+  // category is a worse pattern than a proper expandable list.
+
+  function closeSpecPanel() {
+    elSidebar.classList.remove('open');
+    elSpecToggle?.setAttribute('aria-expanded', 'false');
+  }
+
+  function toggleSpecPanel() {
+    const open = elSidebar.classList.toggle('open');
+    elSpecToggle?.setAttribute('aria-expanded', String(open));
+  }
+
+  elSpecToggle?.addEventListener('click', toggleSpecPanel);
+
   // ---------- sidebar ----------
 
   function renderSidebar() {
@@ -61,6 +80,9 @@
 
     const entries = [{ label: ALL, icon: 'ic-doctor-hub', short: 'All doctors' }]
       .concat(SPECS.filter(s => countFor(s.label) > 0));
+
+    const activeEntry = entries.find(e => e.label === activeSpec) || entries[0];
+    if (elSpecToggleLabel) elSpecToggleLabel.textContent = activeEntry.short;
 
     entries.forEach(entry => {
       const btn = document.createElement('button');
@@ -82,6 +104,7 @@
         syncUrl();
         renderSidebar();
         renderResults();
+        closeSpecPanel();
         elResults.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
       elSidebar.appendChild(btn);

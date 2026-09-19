@@ -117,20 +117,6 @@ async function initSpecGrid() {
   renderSpecGrid(top);
 }
 
-// ---------- search bar (redirects into the full directory) ----------
-
-function initHomeSearch() {
-  const form = document.getElementById('homeDoctorSearch');
-  if (!form) return;
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-    const q = document.getElementById('homeDoctorSearchInput').value.trim();
-    window.location.href = q
-      ? `doctors.html?q=${encodeURIComponent(q)}`
-      : 'doctors.html';
-  });
-}
-
 
 
 const GROQ_ANNOUNCEMENTS_QUERY = `*[_type == "announcement"] | order(_createdAt desc){
@@ -274,5 +260,4 @@ document.addEventListener('keydown', (e) => {
 
 
 initSpecGrid();
-initHomeSearch();
 if (document.getElementById('newsGrid')) loadAnnouncements();

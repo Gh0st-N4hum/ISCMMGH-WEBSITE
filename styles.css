@@ -153,13 +153,14 @@ button { font-family: inherit; cursor: pointer; }
   position: absolute; left: 0; right: 0; top: 100%;
   background: var(--white); border-bottom: 1px solid var(--line);
   padding: 12px clamp(20px,4vw,48px) 20px;
+  box-shadow: 0 12px 24px -12px rgba(15,58,95,.18);
 }
 .mobile-panel a { padding: 12px 6px; font-weight: 600; border-radius: var(--r-sm); }
 .mobile-panel a:hover { background: var(--paper-alt); }
 
 @media (max-width:860px){
   .nav-links, .nav-phone-desktop { display: none; }
-  .nav-mobile { display: block; position: relative; }
+  .nav-mobile { display: block; }
 }
 
 /* ---------- Hero ---------- */
@@ -327,11 +328,7 @@ button { font-family: inherit; cursor: pointer; }
 .doctor-meta { margin-top: 10px; display: grid; gap: 4px; font-size: .86rem; color: var(--ink-soft); }
 .doctor-meta span strong { color: var(--ink); font-weight: 600; }
 
-/* ---------- Homepage doctor search + top-specialty grid ---------- */
-.doctor-search-lg { max-width: 640px; padding: 8px 8px 8px 22px; gap: 12px; margin-bottom: 32px; }
-.doctor-search-lg input { font-size: 1rem; }
-.doctor-search-lg .btn { flex-shrink: 0; padding: 12px 22px; }
-
+/* ---------- Homepage top-specialty grid ---------- */
 .spec-grid {
   display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
 }
@@ -353,9 +350,6 @@ button { font-family: inherit; cursor: pointer; }
   .spec-grid { grid-template-columns: repeat(3, 1fr); }
 }
 @media (max-width: 640px) {
-  .doctor-search-lg { flex-wrap: wrap; padding: 14px 18px; }
-  .doctor-search-lg input { width: 100%; order: 1; }
-  .doctor-search-lg .btn { order: 2; width: 100%; text-align: center; }
   .spec-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
@@ -504,6 +498,7 @@ button { font-family: inherit; cursor: pointer; }
   margin: 0 0 12px; padding-left: 12px;
 }
 .spec-sidebar { display: flex; flex-direction: column; gap: 2px; }
+.spec-toggle { display: none; }
 .spec-filter {
   display: flex; align-items: center; gap: 12px; width: 100%;
   padding: 9px 12px; border: 0; border-radius: var(--r-md, 12px);
@@ -555,15 +550,31 @@ button { font-family: inherit; cursor: pointer; }
   .directory-layout { grid-template-columns: 1fr; gap: 24px; }
   .directory-sidebar { position: static; }
   .directory-sidebar-title { padding-left: 0; }
+
+  /* A horizontally-scrolling filter row hides most of its own options —
+     collapse the list behind a toggle instead, so every specialization
+     is reachable by scrolling down, not swiping sideways. */
+  .spec-toggle {
+    display: flex; align-items: center; gap: 10px; width: 100%;
+    padding: 12px 16px; margin-bottom: 10px;
+    border: 1px solid var(--line); border-radius: var(--r-md, 12px);
+    background: var(--white); color: var(--ink); font: inherit; cursor: pointer;
+  }
+  .spec-toggle-hamburger { width: 18px; height: 18px; flex-shrink: 0; color: var(--ink-soft); }
+  .spec-toggle-label { flex: 1; text-align: left; font-weight: 700; font-size: .92rem; }
+  .spec-toggle-chevron { width: 18px; height: 18px; flex-shrink: 0; color: var(--ink-soft); transition: transform .2s ease; }
+  .spec-toggle[aria-expanded="true"] .spec-toggle-chevron { transform: rotate(180deg); }
+  .spec-toggle[aria-expanded="true"] { border-color: var(--heal-600); }
+
   .spec-sidebar {
-    flex-direction: row; overflow-x: auto; gap: 8px;
-    padding-bottom: 6px; scrollbar-width: thin;
+    display: none; flex-direction: column; gap: 2px;
+    border: 1px solid var(--line); border-radius: var(--r-md, 12px);
+    background: var(--white); padding: 6px; margin-bottom: 18px;
+    max-height: 60vh; overflow-y: auto;
   }
-  .spec-filter {
-    flex-shrink: 0; width: auto; border: 1px solid var(--line);
-    border-radius: var(--r-pill); padding: 8px 14px;
-  }
-  .spec-filter-name { white-space: nowrap; }
+  .spec-sidebar.open { display: flex; }
+  .spec-filter { width: 100%; border-radius: var(--r-sm, 10px); }
+  .spec-filter-name { white-space: normal; }
 }
 
 /* ---------- Cooperative ---------- */
@@ -647,6 +658,14 @@ footer { background: var(--trust-800); color: rgba(255,255,255,.78); padding-blo
   .field-row { grid-template-columns: 1fr; }
   .leadership-grid { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr; }
+
+  /* .leader-photo has no max size and fills its grid cell at aspect-ratio:1 —
+     fine in a 4-up desktop grid, but at a 1-column mobile width that cell is
+     the full screen, turning each photo into an ~330px square. Switch to a
+     compact row (small fixed avatar beside the name) instead of a stacked
+     card at this width. */
+  .leader-card { display: flex; align-items: center; gap: 14px; text-align: left; }
+  .leader-photo { width: 64px; height: 64px; flex-shrink: 0; margin-bottom: 0; font-size: 1.1rem; }
 }
 
 .news-excerpt-link{

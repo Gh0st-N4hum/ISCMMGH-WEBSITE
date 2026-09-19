@@ -106,6 +106,11 @@
     <div class="wrap directory-layout">
       <aside class="directory-sidebar">
         <h3 class="directory-sidebar-title">Specializations</h3>
+        <button type="button" class="spec-toggle" id="specToggle" aria-expanded="false" aria-controls="specSidebar">
+          <svg class="spec-toggle-hamburger" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+          <span class="spec-toggle-label" id="specToggleLabel">All doctors</span>
+          <svg class="spec-toggle-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
         <nav class="spec-sidebar" id="specSidebar" aria-label="Filter by specialization"></nav>
       </aside>
       <div class="directory-main">
