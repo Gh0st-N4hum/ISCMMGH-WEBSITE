@@ -147,13 +147,18 @@ button { font-family: inherit; cursor: pointer; }
 .nav-mobile { display: none; }
 .nav-mobile summary { list-style: none; cursor: pointer; padding: 8px; }
 .nav-mobile summary::-webkit-details-marker { display: none; }
-.nav-mobile[open] .mobile-panel { display: flex; }
 .mobile-panel {
-  display: none; flex-direction: column; gap: 4px;
+  display: flex; flex-direction: column; gap: 4px;
   position: absolute; left: 0; right: 0; top: 100%;
   background: var(--white); border-bottom: 1px solid var(--line);
   padding: 12px clamp(20px,4vw,48px) 20px;
   box-shadow: 0 12px 24px -12px rgba(15,58,95,.18);
+  max-height: 0; overflow: hidden; opacity: 0; visibility: hidden; pointer-events: none;
+  transition: max-height .32s ease, opacity .22s ease, visibility 0s linear .32s;
+}
+.nav-mobile[open] .mobile-panel {
+  max-height: 360px; opacity: 1; visibility: visible; pointer-events: auto;
+  transition: max-height .32s ease, opacity .26s ease .04s, visibility 0s linear 0s;
 }
 .mobile-panel a { padding: 12px 6px; font-weight: 600; border-radius: var(--r-sm); }
 .mobile-panel a:hover { background: var(--paper-alt); }

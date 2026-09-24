@@ -44,6 +44,21 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
 
+  // =========================================================
+  // 3. AUTO-CLOSE MOBILE NAV ON LINK SELECT
+  // =========================================================
+  // The <details> menu only opens/closes natively via its <summary>;
+  // picking a link inside it doesn't close it on its own. Close it
+  // manually so the menu doesn't stay open over the page after
+  // navigating. The CSS handles animating the close itself (see
+  // .mobile-panel's transition) — this just flips the `open` state.
+  document.querySelectorAll('.nav-mobile .mobile-panel a').forEach(link => {
+    link.addEventListener('click', () => {
+      const menu = link.closest('.nav-mobile');
+      if (menu) menu.open = false;
+    });
+  });
+
 });
 
 // Doctor data, SPECS, getInitials, iconChip and the profile modal
